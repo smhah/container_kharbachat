@@ -1,0 +1,2 @@
+1)_allocator.construct(this->_content[i], n);
+2)why this line thas not leak : 76:this->_content = tmp._content;
