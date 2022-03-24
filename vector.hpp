@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 16:33:18 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/23 22:40:06 by macbook          ###   ########.fr       */
+/*   Updated: 2022/03/24 20:06:49 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,31 @@ namespace ft
 
 			//_________member functions________________
 
+			void resize (size_type n, value_type val = value_type())
+			{
+				if(n < _size)
+				{
+					while(_size > n)
+						pop_back();
+				}
+				else if (n > _capacity)
+				{
+					while(n > _capacity)
+						realloc_capacity();
+				}
+				else
+				{
+					while(_size < n)
+							push_back(val);
+				}
+				return ;
+			}
+
+			size_type max_size() const
+			{
+				return(_allocator.max_size());
+			}
+			
 			size_type	size(void) const
 			{
 				return (_size);
@@ -205,40 +230,46 @@ namespace ft
 			}
 			iterator insert (iterator position, const value_type& val)
 			{
-				vector tmp;
+				pointer tmp;
 
 				if(_size + 1 >= _capacity)
 					realloc_capacity();
-				tmp = *this;
+				tmp = _allocator.allocate(_capacity);
 				int i = -1;
 				while(++i < size())
 				{
 					if(compare_pointers(position.get_pointer(), _content + i))
 					{
 						_size++;
-						std::cout << "ENTERED" << std::endl;
 						int j = 0;
 						while(j < i)
 						{
-							tmp._allocator.construct(tmp._content + j, _content[i]);
+							_allocator.construct(tmp + j, _content[j]);
 							j++;
-						}				
-						//inserting
-						tmp._allocator.construct(tmp._content + j, val);
+						}								
+						_allocator.construct(tmp + j, val);
 						j++;
 						while(i < size())
 						{
-							std::cout << "content[i] = " << _content[i] << std::endl;
-							tmp._allocator.construct(tmp._content + j, _content[i]);
-							std::cout << "tmp.content[j] = " << tmp._content[j] << std::endl;
+							_allocator.construct(tmp + j, _content[i]);
 							i++;
 							j++;
 						}
 						break;
+					} 
+					else if(i + 1 == size())
+					{
+						if(compare_pointers(position.get_pointer() - 1, _content + i))
+						{
+							this->push_back(val);
+							_allocator.deallocate(tmp, _capacity);
+							return iterator(_content + i + 1);
+						}
 					}
 				}
-				*this = tmp;
-				tmp.clear();
+				_allocator.deallocate(_content, _capacity);
+				_content = tmp;
+				_allocator.deallocate(tmp, _capacity);
 				return (position);
 			}
 			//_________getters________________
