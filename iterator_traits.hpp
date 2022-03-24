@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   iterator_traits.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 18:56:53 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/21 20:31:15 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/23 21:53:43 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,11 @@ namespace ft
 				return (*this);
 			};
 
+			// T	& operator++(int){
+			// 	(*_iterator)++;
+			// 	return _iterator;
+			// }
+
 			iterator_op operator++(){
 				++_iterator;
 				return (*this);
@@ -103,12 +108,26 @@ namespace ft
 				--_iterator;
 				return (*this);
 			}
+			
 			T   & operator[](unsigned int index){
 				return(_iterator[index]);
+			}
+			
+			T*	operator->() {
+				return &operator*();
+			}
+
+			T * get_pointer(){
+				return _iterator;
 			}
 		private:
 		   T* _iterator;
 	};
+
+	template <class T>
+	iterator_op<T> operator+(int n, iterator_op<T> & it){
+		return(iterator_op<T>(it + n));	
+	}
 	
 	// template <class Iterator> 
 	// struct iterator_traits

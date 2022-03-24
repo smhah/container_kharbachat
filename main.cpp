@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 16:37:43 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/21 20:31:37 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/23 22:31:40 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,33 +17,28 @@
 int main(int ac, char **av)
 {
     ft::vector<char> test;
+    std::vector<int> foo (3,100);   // three ints with a value of 100
+    std::vector<int> bar (5,200);
+    ft::vector<char>::iterator  it;
 
-    std::cout << "HELLO SaLAH" << std::endl;
-    test.push_back('A');
+    std::cout << "HELLO SALAH" << std::endl;
+
+    // it = foo.begin();
+    // it = foo.insert(it, 20);
+    // for(int i = 0; i < foo.size(); i++)
+    //     std::cout << foo[i] << std::endl;
+    // std::cout << "it point to: " << *it << std::endl;
+    test.push_back('b');
     test.push_back('c');
-    test.push_back('j');
-    // std::cout << "get_size() is : " << test.get_size() << std::endl;
-    // for (int i = 0;i < test.get_size();i++)
-    // {
-    //     std::cout << test[i] << std::endl;
-    //     //std::cout << test.get_content(i) << std::endl;
-    // }
-    // while(1);
-    ft::vector<char>::iterator itob = test.begin();
-    ft::vector<char>::iterator itoe = test.end();
-    //ft::random_access_iterator<char> iterator = test.begin();
-    ft::vector<char>::iterator itb = test.begin();
-    ft::vector<char>::iterator ite = test.end();
-
-    // std::cout << "substract : " << itob - itoe << std::endl;
-    // std::cout << "substract : " << itb - ite << std::endl;
-    itb += 1;
-    itb -= 1;
-    itb =  1 + itb;
-    // itb += 1;
-    // itb = itb - 1;
-    // itb = itb - 1;
-    std::cout << itb[0] << std::endl;
-    //std::cout << it - it2 << std::endl;
-    //std::cout << test.get_content(0) << std::endl;
+    test.push_back('d');
+    it = test.begin();
+    it = test.insert(it, 'a');
+    for(int i = 0; i < test.size(); i++)
+        std::cout << test[i] << std::endl;
+    // ft::vector<char>::iterator itob = test.begin();
+    // ft::vector<char>::iterator itoe = test.end();
+    // ft::vector<char>::iterator itb = test.begin();
+    // ft::vector<char>::iterator ite = test.end();
+    // itb =  itb + 1;
+    // std::cout << test.at(0) << std::endl;
 }
