@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 16:33:18 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/25 19:01:58 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/25 19:16:46 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,16 @@ namespace ft
 			iterator erase (iterator first, iterator last)
 			{
 				iterator save_first = first;
-				size_type distance = std::distance(begin(), end());
-				for(;first < end() - 1;first++)
+				size_type start_index = first - begin();
+				size_type n = last - first;
+				for(;start_index < size() - 1;start_index++)
 				{
-					_allocator.destroy(_content);
+					std::cout << "content destroyed : " << *(_content + start_index) << std::endl;
+					_allocator.destroy(_content + start_index);
+					std::cout << "content affected : " << *(_content + start_index + n) << std::endl;
+					_allocator.construct(_content + start_index, _content[start_index + n]);
 				}
+				return (save_first);
 			}
 
 			void swap(vector & x)
