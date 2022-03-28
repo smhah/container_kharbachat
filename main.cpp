@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 16:37:43 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/25 19:01:18 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/28 01:53:03 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,42 @@
 
 int main(int ac, char **av)
 {
-    ft::vector<int> foo;   // three ints with a value of 100
+    ft::Vector<int> foo;   // three ints with a value of 100
     std::vector<int> bar;  // five ints with a value of 200
-
     
-    // foo.swap(bar);
     foo.push_back(1);
     foo.push_back(2);
     foo.push_back(3);
-    ft::vector<int>::iterator itb;
-    ft::vector<int>::iterator ite;
+    foo.push_back(4);
+    foo.push_back(5);
+    ft::Vector<int> foo_one(3, 50);
+    // int myarray [] = { 501,502,503 };
+    ft::Vector<int>::iterator itb;
+    // ft::Vector<int>::iterator ite;
     itb = foo.begin();
-    ite = foo.begin() + 1;
-    ite = foo.erase(itb, ite);
-    //itb = foo.erase(itb);
+    // ite = foo.begin() + 5;
+    foo.assign(foo_one.begin(), foo_one.end());
+    // bar.push_back(1);
+    // bar.push_back(2);
+    // bar.push_back(3);
+    // bar.push_back(4);
+    // bar.push_back(5);
+    // std::vector<int>::iterator itob;
+    // std::vector<int>::iterator itoe;
+    // std::vector<int> bar_one(3, 50);
 
-    bar.push_back(1);
-    bar.push_back(2);
-    bar.push_back(3);
-    std::vector<int>::iterator itob;
-    std::vector<int>::iterator itoe;
-    itob = bar.begin() + 1;
-    itoe = bar.begin() + 2;
-    itob = bar.erase(itob, itoe);
+    // itob = bar.end();
+    // itoe = bar.begin() + 5;
+    // bar.assign(bar_one.begin() + 1, bar_one.end());
     std::cout << "foo contains:";
     for (unsigned i=0; i<foo.size(); i++)
     std::cout << ' ' << foo[i];
     std::cout << '\n';
     
-    std::cout << "bar contains:";
-    for (unsigned i=0; i<bar.size(); i++)
-    std::cout << ' ' << bar[i];
-    std::cout << '\n';
-
+    // std::cout << "bar contains:";
+    // for (unsigned i=0; i<bar.size(); i++)
+    // std::cout << ' ' << bar[i];
+    // std::cout << '\n';
+    // //while(1);
     return 0;
 }

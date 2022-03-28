@@ -3,22 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   iterator_traits.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 18:56:53 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/23 21:53:43 by macbook          ###   ########.fr       */
+/*   Updated: 2022/03/28 02:08:18 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iostream>
+#include "utils/utils.hpp"
+
 namespace ft
 {
 	
 	template <class T>
-	class iterator_op
+	class iterator_op : public ft::iterator<std::random_access_iterator_tag, T>
 	{
-		public:    
+		public:
+			typedef typename iterator<std::random_access_iterator_tag, T>::difference_type		difference_type;
+			typedef typename iterator<std::random_access_iterator_tag, T>::value_type			value_type;
+			typedef typename iterator<std::random_access_iterator_tag, T>::pointer				pointer;
+			typedef typename iterator<std::random_access_iterator_tag, T>::reference			reference;
+			typedef typename iterator<std::random_access_iterator_tag, T>::iterator_category	iterator_category;
+	
 			iterator_op() {};
 			
 			iterator_op(iterator_op const & to_copy) {
@@ -30,6 +38,8 @@ namespace ft
 			}
 			
 			~iterator_op(){};
+			
+			//operator iterator_op<const T> () const { return iterator_op<const T>(_iterator); }
 			
 			iterator_op & operator=(iterator_op const & rhs){
 				_iterator = rhs._iterator;
@@ -80,7 +90,7 @@ namespace ft
 				return (_iterator > to_compare._iterator);
 			};
 			
-			T   operator*(){
+			reference operator*(){
 				return (*_iterator);  
 			};
 			
@@ -109,19 +119,19 @@ namespace ft
 				return (*this);
 			}
 			
-			T   & operator[](unsigned int index){
+			reference operator[](unsigned int index){
 				return(_iterator[index]);
 			}
 			
-			T*	operator->() {
+			pointer	operator->() {
 				return &operator*();
 			}
 
-			T * get_pointer(){
+			pointer get_pointer(){
 				return _iterator;
 			}
 		private:
-		   T* _iterator;
+		   pointer _iterator;
 	};
 
 	template <class T>
