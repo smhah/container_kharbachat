@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 16:37:43 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/28 01:53:03 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/29 03:13:52 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,42 +16,20 @@
 
 int main(int ac, char **av)
 {
-    ft::Vector<int> foo;   // three ints with a value of 100
-    std::vector<int> bar;  // five ints with a value of 200
-    
-    foo.push_back(1);
-    foo.push_back(2);
-    foo.push_back(3);
-    foo.push_back(4);
-    foo.push_back(5);
-    ft::Vector<int> foo_one(3, 50);
-    // int myarray [] = { 501,502,503 };
-    ft::Vector<int>::iterator itb;
-    // ft::Vector<int>::iterator ite;
-    itb = foo.begin();
-    // ite = foo.begin() + 5;
-    foo.assign(foo_one.begin(), foo_one.end());
-    // bar.push_back(1);
-    // bar.push_back(2);
-    // bar.push_back(3);
-    // bar.push_back(4);
-    // bar.push_back(5);
-    // std::vector<int>::iterator itob;
-    // std::vector<int>::iterator itoe;
-    // std::vector<int> bar_one(3, 50);
-
-    // itob = bar.end();
-    // itoe = bar.begin() + 5;
-    // bar.assign(bar_one.begin() + 1, bar_one.end());
-    std::cout << "foo contains:";
-    for (unsigned i=0; i<foo.size(); i++)
-    std::cout << ' ' << foo[i];
-    std::cout << '\n';
-    
-    // std::cout << "bar contains:";
-    // for (unsigned i=0; i<bar.size(); i++)
-    // std::cout << ' ' << bar[i];
-    // std::cout << '\n';
-    // //while(1);
-    return 0;
+    /*------------ std::vector ---------*/
+    std::vector<int> v(3, 4);
+    std::vector<int>::iterator it, it1, tm;
+    it = v.begin();
+    it1 = v.begin() + 1;
+	tm = it++;
+	std::cout << "*it = " << *it << "*tm = " << *tm << std::endl;
+    /*----------------------------------*/
+    /*------------ ft::Vector ---------*/
+    ft::Vector<int> my_v(3, 4);
+    ft::Vector<int>::iterator my_it, my_it1, tmp;
+    my_it = my_v.begin();
+    my_it1 = my_v.begin() + 1;
+	tmp = my_it++;
+    std::cout << "my_*it = " << *my_it << "*tmp = " << *tmp << std::endl;
+	
 }

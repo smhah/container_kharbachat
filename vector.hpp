@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 16:33:18 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/28 02:21:19 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/29 03:07:00 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <iostream>
 #include "iterator_traits.hpp"
+#include "reverse_iterator.hpp"
+#include "iterator.hpp"
 #include <stdio.h>
 #include <iterator>
 #include <algorithm>
@@ -30,7 +32,9 @@ namespace ft
 			typedef Alloc allocator_type;
 			typedef size_t	size_type;
 			typedef	ft::iterator_op<T> iterator;
+			typedef ft::reverse_iterator<iterator>	reverse_iterator;
 			typedef	ft::iterator_op<const value_type>			const_iterator;
+			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 			typedef typename	allocator_type::pointer	pointer;
 			typedef typename	allocator_type::const_pointer	const_pointer;
 			typedef typename	allocator_type::reference	reference;
@@ -52,37 +56,60 @@ namespace ft
 			
 			Vector(const allocator_type & alloc= allocator_type()) : _allocator(alloc)
 			{
-				std::cout << "default constructor called" << std::endl;
-				_capacity = 2;
+				_capacity = 0;
 				this->_content = this->_allocator.allocate(_capacity);
 				this->_size = 0;
 			};
 			
-			explicit Vector (size_type n, const value_type& val = value_type(),
-					const allocator_type& alloc = allocator_type()) : _allocator(alloc)
+			// explicit Vector (size_type n, const value_type& val = value_type(),
+			// 		const allocator_type& alloc = allocator_type()) : _allocator(alloc)
+			// {
+			// 	_capacity = 2;
+			// 	_content = _allocator.allocate(_capacity);
+			// 	_size = 0;
+			// 	while(n > _capacity)
+			// 		realloc_capacity();
+			// 	size_type i = 0;
+			// 	while(i < n)
+			// 	{
+			// 		_allocator.construct(_content + i, val);
+			// 		i++;
+			// 		_size++;
+			// 	}
+			// }
+			explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _allocator(alloc), _size(n),  _capacity(n)
 			{
-				// (void)alloc;
-				_capacity = 2;
-				_content = _allocator.allocate(_capacity);
-				_size = 0;
-				while(n > _capacity)
-					realloc_capacity();
-				int i = 0;
-				while(i < n)
-				{
-					_allocator.construct(_content + i, val);
-					i++;
-					_size++;
-				}
+				if (n)
+					_content = _allocator.allocate(n);
+				for (size_t i = 0; i < _size; i++)
+					_allocator.construct(&_content[i], val);
 			}
 			
+			Vector 			(const Vector& x): _size(0), _capacity(0)
+			{
+				if (!x.size())
+				{
+					return	;
+				}
+				_capacity = x.size();
+				_content = _allocator.allocate(_capacity);
+				*this = x;
+			}
+
 			template <class InputIterator>
          	Vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), 
 			 	typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) : _allocator(alloc)
 			{
-				 _capacity = 2;
-				 _content = _allocator.allocate(_capacity);
-				insert(begin(), first, last);
+				difference_type n;
+				n = std::distance(first, last);
+				if(n < 0)
+					n = n * (-1);
+				_capacity = n;
+				 _size = n;
+				if (n)
+					_content = _allocator.allocate(n);
+				for (difference_type j = 0; j < n && first != last; ++j, ++first)
+					_allocator.construct(&_content[j], *first);
 			 }
 			
 			~Vector()
@@ -92,22 +119,23 @@ namespace ft
 			//_________operators__________
 			Vector &	operator=(Vector const & rhs)
 			{
-				std::cout << "operator = called" << std::endl;
-				//_allocator.deallocate(_content, _capacity);
-				// if(rhs == *this)
-				// 	return *this;
 				this->clear();
 				_content = _allocator.allocate(rhs._capacity);
-				for(int i = 0; i < rhs.size(); i++)
+				for(size_type i = 0; i < rhs.size(); i++)
 					_allocator.construct(_content + i, rhs._content[i]);
 				_capacity = rhs._capacity;
 				_size = rhs._size;
 				return *this;
 			}
 
-			reference	operator[](unsigned int index)
+			reference operator[] (size_type n)
 			{
-				return (_content[index]);
+				return (_content[n]);
+			}
+
+			const_reference operator[] (size_type n) const
+			{
+				return(_content[n]);
 			}
 
 			//_________member functions________________
@@ -116,8 +144,8 @@ namespace ft
 			{
 				if (n > max_size())
 					throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
-				while(n > _capacity)
-					realloc_capacity();
+				if(n > _capacity)
+					realloc_capacity(n);
 				return ;
 			}
 			
@@ -136,20 +164,14 @@ namespace ft
 			
 			iterator erase (iterator first, iterator last)
 			{
-				iterator save_first = first;
-				size_type start_index = std::distance(first,begin());
-				size_type end_index = std::distance(last, begin());
-				size_type n = std::distance(last, first);
-				size_type save_size = size();
-				
-				for(;start_index < end_index ;start_index++)
+				size_type	positionIndex = std::distance(begin(), first);
+				size_type	n = std::distance(first, last);
+				for (size_type i = positionIndex; i < _size - n; i++)
 				{
-					_allocator.destroy(_content + start_index);
-					_size--;
-					if(start_index + n  < save_size)
-						_allocator.construct(_content + start_index, _content[start_index + n]);
+					_content[i] = _content[i + n];
 				}
-				return (save_first);
+				_size -= n;
+				return (iterator(_content + positionIndex));
 			}
 
 			void swap(Vector & x)
@@ -171,19 +193,14 @@ namespace ft
 			{
 				if(n < _size)
 				{
-					while(_size > n)
-						pop_back();
+					_size = n;
 				}
-				else if (n > _capacity)
+				if (n > _capacity)
 				{
-					while(n > _capacity)
-						realloc_capacity();
+					realloc_capacity(n);
 				}
-				else
-				{
-					while(_size < n)
+				while(_size < n)
 							push_back(val);
-				}
 				return ;
 			}
 
@@ -211,25 +228,36 @@ namespace ft
 				return (_content[index]);
 			}
 			
-			void	realloc_capacity(void)
+			void	realloc_capacity(size_type n = 0)
 			{
-				value_type *tmp;
-				size_type old_capacity = _capacity;
+				if (n > max_size())
+					throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
+				
+				if (!_capacity)
+				{
+					_capacity = n ? n : 1;
+					_content = _allocator.allocate(_capacity);
+					return ;
+				}
 
-				_capacity *= 2;
-				tmp = _allocator.allocate(_capacity);
-				for(int i = 0; i < _size; i++)
-					_allocator.construct(tmp + i, _content[i]);
-				_allocator.deallocate(_content, old_capacity);
-				_content = tmp;
+				pointer		tmp = _content;
+				size_type	cap = _capacity;
+
+				_capacity = n ? n : _capacity * 2;
+
+				_content = _allocator.allocate(_capacity);
+				for (size_type i = 0; i < _size; i++)
+					_allocator.construct(_content + i, tmp[i]);
+
+				_allocator.deallocate(tmp, cap);
 			}
 			
-			void	push_back(const value_type & n)
+			void push_back (const value_type& val)
 			{
-				if(_size + 1 >= _capacity)
+				if(_size + 1 > _capacity)
 					realloc_capacity();
-				_content[_size] = n;
 				_size++;
+				_allocator.construct(_content + _size - 1, val);
 			}
 
 			void pop_back()
@@ -249,6 +277,16 @@ namespace ft
 				return (const_iterator(_content));
 			} 
 			
+			reverse_iterator rbegin()
+			{
+				return (reverse_iterator(end()));
+			}
+			
+			const_reverse_iterator rbegin() const
+			{
+				return(const_reverse_iterator(end()));
+			}
+			
 			iterator	end()
 			{
 				return(iterator(_content + _size));
@@ -257,6 +295,16 @@ namespace ft
 			const_iterator	end() const
 			{
 				return(const_iterator(_content + _size));
+			}
+			
+			reverse_iterator rend()
+			{
+				return (reverse_iterator(begin()));
+			}
+
+			const_reverse_iterator rend() const
+			{
+				return (const_reverse_iterator(begin()));
 			}
 			
 			reference front()
@@ -328,75 +376,41 @@ namespace ft
 			
 			void	insert (iterator position, size_type n , const value_type& val)
 			{
-				pointer tmp;
-
-				iterator it = begin();
-				iterator last = end() - 1;
-				iterator first = begin();
-				size_type dist = std::distance(begin(), position);
-				position = begin() + dist;
-				if(_size + n >= _capacity)
-					reserve(_size + n);
-				tmp = _allocator.allocate(_capacity);
-				int i = -1;
-				_size += n;
-				while(++i < size())
+				difference_type	positionIndex = std::distance(begin(), position);
+				if(_size + n > _capacity)
 				{
-					if(it == position)
-					{
-						int j = 0;
-						for(;first < position;first++,j++)
-							_allocator.construct(tmp + j, *first);
-						size_type c = 0;
-						for(; c < n; c++, j++)
-							_allocator.construct(tmp + j, val);
-						for(;first <= last;first++, j++)
-							_allocator.construct(tmp + j, *first);
-						break;
-					}
-					it++;
+					if (n > _size)
+						reserve(_size + n);
+					else
+						reserve(_capacity * 2);
 				}
-				_allocator.deallocate(_content, _capacity);
-				_content = tmp;
-				return ;
+				for (difference_type i = _size - 1; i >= positionIndex; i--)
+					_allocator.construct(&_content[i + n], _content[i]);
+				for (size_t i = 0; i < n; i++)
+					_allocator.construct(&_content[positionIndex + i], val);
+				_size += n;
 			}
 
 			template <class InputIterator>
     		void insert (iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 			{
-				pointer tmp;
-				iterator it = begin();
-				iterator start = begin();
-				size_type dist = std::distance(begin(), position);
-				size_type n = std::distance(first, last);
-				iterator the_end = end() - 1;
-				
-				position = begin() + dist;
-				if(_size + n >= _capacity)
-					reserve(_size + n);
-				tmp = _allocator.allocate(_capacity);
-				int i = -1;
-				_size += n;
-				int j;
-				while(++i < size())
+				difference_type	positionIndex = std::distance(begin(), position);
+				size_t n = std::distance(first, last);
+				if(_size + n > _capacity)
 				{
-					if(it == position)
-					{
-						j = 0;
-						for(;start < position;start++,j++)
-							_allocator.construct(tmp + j, *start);
-						size_type c = 0;
-						for(; c < n; c++, j++, first++)
-							_allocator.construct(tmp + j, *first);
-						for(;start <= the_end;start++, j++)
-							_allocator.construct(tmp + j, *start);
-						break;
-					}
-					it++;
+					if (n > _size)
+						reserve(_size + n);
+					else
+						reserve(_capacity * 2);
 				}
-				_allocator.deallocate(_content, _capacity);
-				_content = tmp;
-				return ;
+				for (difference_type i = _size - 1; i >= positionIndex; i--)
+					_allocator.construct(&_content[i + n], _content[i]);
+				for (size_type i = 0; i < n; i++)
+				{
+					_allocator.construct(&_content[positionIndex + i], *first);
+					first++;
+				}
+				_size += n;
 			}
 			//_________getters________________
 			
@@ -415,12 +429,51 @@ namespace ft
 			// {
 				
 			// }
-		protected:
+		private:
 			allocator_type	_allocator;
 			pointer _content;
-			unsigned int	_size;
+			size_type	_size;
 			size_type		_capacity;
 	};
+	template <class T, class Alloc>
+		bool	operator== (const Vector<T, Alloc>& lhs, const Vector<T, Alloc>& rhs)
+		{
+			if (lhs.size() != rhs.size())
+				return false;
+			return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+		}
+	template <class T, class Alloc>
+		bool	operator!= (const Vector<T, Alloc>& lhs, const Vector<T, Alloc>& rhs)
+		{
+			if (lhs.size() != rhs.size())
+				return true;
+			return !operator==(lhs, rhs);
+		}
+	template <class T, class Alloc>
+  		bool	operator<  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+		{
+			return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		}
+	template <class T, class Alloc>
+  		bool	operator<= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+		{
+			return !operator<(rhs, lhs);
+		}
+	template <class T, class Alloc>
+  		bool	operator> (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+		{
+			return operator<(rhs, lhs);
+		}
+	template <class T, class Alloc>
+  		bool	operator>= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs)
+		{
+			return !operator<(lhs, rhs);
+		}
+	
+	/*	swap	*/
+
+	template <class T, class Alloc>
+  		void	swap (Vector<T,Alloc>& x, Vector<T,Alloc>& y) {	x.swap(y);	}
 	// template < class T, class Alloc = std::allocator<T> > 
 	// std::ostream &			operator<<( std::ostream & o, vector<T, Alloc> const & k )
 	// {

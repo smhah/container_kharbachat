@@ -1,0 +1,10 @@
+_capacity = 0;
+				_size = 0;
+				reserve(n);
+				size_type i = 0;
+				while(i < n)
+				{
+					_allocator.construct(_content + i, val);
+					i++;
+					_size++;
+				}
