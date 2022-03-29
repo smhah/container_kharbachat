@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 02:30:58 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/28 23:24:25 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/29 03:32:31 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,13 @@ namespace ft
 	}
 	
 	template <class Iterator>
-	typename reverse_iterator<Iterator>::difference_type operator- (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	typename reverse_iterator<Iterator>::difference_type operator- (
+		const reverse_iterator<Iterator>& lhs,
+		const reverse_iterator<Iterator>& rhs)
 	{
-		return (lhs.base() - rhs.base());
+		typename reverse_iterator<Iterator>::iterator_type tmp1 = lhs.base();
+		typename reverse_iterator<Iterator>::iterator_type tmp2 = rhs.base();
+		return (tmp2 - tmp1);
 	}
 	
 	template <class Iterator>
