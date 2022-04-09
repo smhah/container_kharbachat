@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 16:33:18 by smhah             #+#    #+#             */
-/*   Updated: 2022/03/29 03:07:00 by smhah            ###   ########.fr       */
+/*   Updated: 2022/03/29 21:54:06 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 #include "iterator_traits.hpp"
 #include "reverse_iterator.hpp"
 #include "iterator.hpp"
-#include <stdio.h>
-#include <iterator>
 #include <algorithm>
 #pragma once
 
