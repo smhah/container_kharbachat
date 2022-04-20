@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/03 22:45:00 by smhah             #+#    #+#             */
-/*   Updated: 2022/04/19 03:59:35 by smhah            ###   ########.fr       */
+/*   Updated: 2022/04/20 05:39:31 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int main()
 	
 	it = m.begin();
 
-	std::cout << "*it = " << *it << std::endl;
+	//std::cout << "*it = " << *it << std::endl;
 
 	planet1 = ft::make_pair(1, 1);
 	planet3 = ft::make_pair(3, 2);
