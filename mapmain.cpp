@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/03 22:45:00 by smhah             #+#    #+#             */
-/*   Updated: 2022/04/05 02:21:25 by smhah            ###   ########.fr       */
+/*   Updated: 2022/04/19 03:59:35 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,34 @@
 // Driver Code
 int main()
 {
-	ft::pair<std::string, int> planeta;
-	ft::pair<std::string, int> planetb;
-	ft::pair<std::string, int> planetc;
-	ft::pair<std::string, int> planetd;
+	
+	ft::map<int, int> m;
+	ft::pair<int, int> planet1;
+	ft::pair<int, int> planet3;
+	ft::pair<int, int> planet5;
+	ft::pair<int, int> planet7;
+	ft::pair<int, int> planet9;
+	ft::pair<int, int> planet8;
+	ft::map<int, int>::iterator it;
+	
+	it = m.begin();
 
-	planeta = ft::make_pair("strina", 1);
-	planetb = ft::make_pair("strinb", 2);
-	planetc = ft::make_pair("strinc", 3);
-	planetd = ft::make_pair("strind", 4);
-	// std::cout << "string is "<< planet.first << " int is " << planet.second << std::endl;
-	Node<std::string, int> *root = NULL;
-	root = insert(root, planetc);
-	root = insert(root, planetd);
-	root = insert(root, planeta);
-	root = insert(root, planetb);
-	// Node *root = NULL;
+	std::cout << "*it = " << *it << std::endl;
+
+	planet1 = ft::make_pair(1, 1);
+	planet3 = ft::make_pair(3, 2);
+	planet5 = ft::make_pair(5, 3);
+	planet7 = ft::make_pair(7, 4);
+	planet9 = ft::make_pair(9, 5);
+	planet8 = ft::make_pair(8, 6);
+	//std::cout << "string is "<< planet.first << " int is " << planet.second << std::endl;
+	ft::map<int, int>::Node *root = NULL;
+	root = m.insert(root, planet7, root);
+	root = m.insert(root, planet3, root);
+	root = m.insert(root, planet9, root);
+	root = m.insert(root, planet5, root);
+	root = m.insert(root, planet8, root);
+	root = m.deleteNode(root, planet9);
 	
 	// /* Constructing tree given in
 	// the above figure */
@@ -50,8 +62,8 @@ int main()
 	// */
 	// std::cout << "Preorder traversal of the "
 	// 		"constructed AVL tree is \n";
-	preOrder(root);
-	
+	m.preOrder(root);
+	m.printTree(root, nullptr, false);
 	return 0;
 }
 

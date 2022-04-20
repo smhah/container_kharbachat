@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 23:43:26 by smhah             #+#    #+#             */
-/*   Updated: 2022/04/05 02:20:38 by smhah            ###   ########.fr       */
+/*   Updated: 2022/04/18 07:04:10 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ namespace ft
         first_type first;
         second_type second;
 
-        pair(){}
+        pair():first(), second() {}
         
         template<class U, class V> pair (const pair<U,V>& pr) : first(pr.first), second(pr.second)
         {
