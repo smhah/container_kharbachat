@@ -6,7 +6,7 @@
 /*   By: smhah <smhah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/03 22:44:26 by smhah             #+#    #+#             */
-/*   Updated: 2022/04/20 05:35:50 by smhah            ###   ########.fr       */
+/*   Updated: 2022/04/20 05:39:09 by smhah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace ft
 		// An AVL tree node
 		struct Node
 		{
-			value_type *content;
+			value_type content;
 			Node *left;
 			Node *right;
 			Node *parent;
@@ -191,28 +191,28 @@ namespace ft
 
 			// Left Left Case
 
-			// if (balance > 1 && content < node->left->content)
-			// 	return rightRotate(node);
+			if (balance > 1 && content < node->left->content)
+				return rightRotate(node);
 
-			// // Right Right Case
+			// Right Right Case
 
-			// if (balance < -1 && content > node->right->content)
-			// 	return leftRotate(node);
+			if (balance < -1 && content > node->right->content)
+				return leftRotate(node);
 
-			// // Left Right Case
+			// Left Right Case
 
-			// if (balance > 1 && content > node->left->content)
-			// {	
-			// 	node->left = leftRotate(node->left);
-			// 	return rightRotate(node);
-			// }
-			// // Right Left Case
+			if (balance > 1 && content > node->left->content)
+			{	
+				node->left = leftRotate(node->left);
+				return rightRotate(node);
+			}
+			// Right Left Case
 
-			// if (balance < -1 && content < node->right->content)
-			// {
-			// 	node->right = rightRotate(node->right);
-			// 	return leftRotate(node);
-			// }
+			if (balance < -1 && content < node->right->content)
+			{
+				node->right = rightRotate(node->right);
+				return leftRotate(node);
+			}
 			/* return the (unchanged) node pointer */
 			return node;
 		}
@@ -406,7 +406,7 @@ namespace ft
 			}
 		
 			showTrunks(trunk);
-			std::cout << " " << root->content->first << std::endl;
+			std::cout << " " << root->content.first << std::endl;
 		
 			if (prev) {
 				prev->str = prev_str;
@@ -421,13 +421,13 @@ namespace ft
 		{
 			if(root != NULL)
 			{
-				std::cout <<"key is " << root->content->first << std::endl;
+				std::cout <<"key is " << root->content.first << std::endl;
 				if(root->left)
-					std::cout << "left child is " << root->left->content->first << std::endl;
+					std::cout << "left child is " << root->left->content.first << std::endl;
 				if (root->right)
-					std::cout << "right child is " << root->right->content->first << std::endl;
+					std::cout << "right child is " << root->right->content.first << std::endl;
 				if(root->parent)
-					std::cout <<"parent is " << root->parent->content->first <<std::endl;
+					std::cout <<"parent is " << root->parent->content.first <<std::endl;
 				preOrder(root->left);
 				preOrder(root->right);
 			}
